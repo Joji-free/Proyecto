@@ -44,8 +44,9 @@
 <body>
 <div class="login-container">
   <h2>Iniciar Sesión</h2>
+
   <%
-    // Mostrar mensaje de error si existe
+    // 1) Obtener mensaje de error que haya puesto el servlet
     String error = (String) request.getAttribute("error");
     if (error != null) {
   %>
@@ -54,10 +55,21 @@
 
   <form action="login" method="post">
     <label for="usuario">Usuario</label>
-    <input type="text" name="usuario" id="usuario" required />
+    <%
+      // 2) Precargar el campo "usuario" si el servlet lo envió
+      String usuarioPrevio = (String) request.getAttribute("usuario");
+      if (usuarioPrevio == null) {
+        usuarioPrevio = "";
+      }
+    %>
+    <input
+            type="text"
+            name="usuario"
+            id="usuario"
+            value="<%= usuarioPrevio %>" />
 
     <label for="contrasena">Contraseña</label>
-    <input type="password" name="contrasena" id="contrasena" required />
+    <input type="password" name="contrasena" id="contrasena" />
 
     <button type="submit">Entrar</button>
   </form>

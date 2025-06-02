@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
-<%@ page import="model.Producto" %>
+<%@ page import="model.Producto, java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,45 +39,97 @@
       margin-bottom: 20px;
       display: block;
       text-align: center;
+      text-decoration: none;
+      color: #333;
+    }
+    .error-list {
+      color: red;
+      margin-bottom: 15px;
+      list-style-type: disc;
+      padding-left: 20px;
     }
   </style>
 </head>
 <body>
 <%
-  // Verificar rol ADMIN
+  // 1) Verificar rol ADMIN
   String rol = (String) session.getAttribute("rol");
   if (rol == null || !"ADMIN".equals(rol)) {
     response.sendRedirect("productos");
     return;
   }
 
-  // Recuperar el objeto Producto que envió el servlet en request
+  // 2) Recuperar lista de errores, si el servlet la envió
+  @SuppressWarnings("unchecked")
+  List<String> errores = (List<String>) request.getAttribute("errores");
+
+  // 3) Valores previos (en caso de reenvío con errores)
+  String idPrev     = request.getAttribute("id")     != null ? request.getAttribute("id").toString() : null;
+  String nombrePrev = (String) request.getAttribute("nombre");
+  String marcaPrev  = (String) request.getAttribute("marca");
+  String precioPrev = (String) request.getAttribute("precio");
+  String stockPrev  = (String) request.getAttribute("stock");
+
+  // 4) Si no hay errores, el servlet habrá puesto "producto" en request:
   Producto producto = (Producto) request.getAttribute("producto");
-  if (producto == null) {
-    // Si no llegó nada, redirigimos de nuevo a lista
+
+  // 5) Si no llegaron ni "producto" ni "idPrev", redirigir al listado
+  if (producto == null && idPrev == null) {
     response.sendRedirect("productos");
     return;
   }
+
+  // 6) Determinar valores definitivos para cada campo:
+  String idValue     = idPrev != null ? idPrev : String.valueOf(producto.getId());
+  String nombreValue = nombrePrev != null ? nombrePrev : producto.getNombre();
+  String marcaValue  = marcaPrev  != null ? marcaPrev  : producto.getMarca();
+  String precioValue = precioPrev != null ? precioPrev : producto.getPrecio().toString();
+  String stockValue  = stockPrev  != null ? stockPrev  : String.valueOf(producto.getStock());
 %>
 
 <div class="form-container">
   <a href="productos" class="top-link">← Regresar a Productos</a>
   <h2>Editar Producto</h2>
+
+  <% if (errores != null && !errores.isEmpty()) { %>
+  <ul class="error-list">
+    <% for (String err : errores) { %>
+    <li><%= err %></li>
+    <% } %>
+  </ul>
+  <% } %>
+
   <form action="editProduct" method="post">
     <!-- ID oculto -->
-    <input type="hidden" name="id" value="<%= producto.getId() %>" />
+    <input type="hidden" name="id" value="<%= idValue %>" />
 
     <label for="nombre">Nombre:</label>
-    <input type="text" name="nombre" id="nombre" value="<%= producto.getNombre() %>" required />
+    <input
+            type="text"
+            name="nombre"
+            id="nombre"
+            value="<%= nombreValue %>" />
 
     <label for="marca">Marca:</label>
-    <input type="text" name="marca" id="marca" value="<%= producto.getMarca() %>" required />
+    <input
+            type="text"
+            name="marca"
+            id="marca"
+            value="<%= marcaValue %>" />
 
     <label for="precio">Precio:</label>
-    <input type="text" name="precio" id="precio" value="<%= producto.getPrecio() %>" required />
+    <input
+            type="text"
+            name="precio"
+            id="precio"
+            value="<%= precioValue %>" />
 
     <label for="stock">Stock:</label>
-    <input type="number" name="stock" id="stock" min="0" value="<%= producto.getStock() %>" required />
+    <input
+            type="text"
+            name="stock"
+            id="stock"
+            value="<%= stockValue %>" />
 
     <button type="submit">Actualizar Producto</button>
   </form>
