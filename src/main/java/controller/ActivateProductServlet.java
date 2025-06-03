@@ -7,13 +7,14 @@ import services.ProductService;
 
 import java.io.IOException;
 
-@WebServlet("/deleteProduct")
-public class DeleteProductServlet extends HttpServlet {
+@WebServlet("/activateProduct")
+public class ActivateProductServlet extends HttpServlet {
     private final ProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Solo ADMIN puede reactivar
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("rol"))) {
             response.sendRedirect(request.getContextPath() + "/productos");
@@ -24,12 +25,13 @@ public class DeleteProductServlet extends HttpServlet {
         if (idParam != null) {
             try {
                 int id = Integer.parseInt(idParam.trim());
-                productService.desactivarProducto(id); // soft‐delete
+                productService.activarProducto(id); // pone activo = 1
             } catch (NumberFormatException e) {
-                // Ignorar formato inválido o loguear si lo deseas
+                // Ignorar o loguear el error de parseo
             }
         }
 
-        response.sendRedirect(request.getContextPath() + "/productos");
+        // Redirigir de nuevo a la lista de inactivos
+        response.sendRedirect(request.getContextPath() + "/productosInactivos");
     }
 }

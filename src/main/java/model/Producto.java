@@ -8,6 +8,7 @@ public class Producto {
     private String marca;
     private BigDecimal precio;
     private int stock;
+    private boolean activo;
 
     public Producto() { }
 
@@ -17,6 +18,7 @@ public class Producto {
         this.marca = marca;
         this.precio = precio;
         this.stock = stock;
+        this.activo = true;
     }
 
     // Getters y setters
@@ -54,4 +56,7 @@ public class Producto {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public boolean isActivo() {return activo;}
+    public void setActivo(boolean activo) {this.activo = activo;}
 }

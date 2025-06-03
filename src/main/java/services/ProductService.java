@@ -1,35 +1,51 @@
 package services;
 
 import model.Producto;
-import repository.IProductRepository;
 import repository.ProductRepository;
 
 import java.util.List;
 
 public class ProductService {
-    private final IProductRepository productRepo = new ProductRepository();
+    private final ProductRepository repository = new ProductRepository();
 
     public List<Producto> listarProductos() {
-        return productRepo.listarTodos();
+        // devuelve solo activos (activo = 1)
+        return repository.listarTodos();
     }
 
     public Producto obtenerPorId(int id) {
-        return productRepo.obtenerPorId(id);
+        // solo activos
+        return repository.obtenerPorId(id);
     }
 
-    public boolean insertarProducto(Producto p) {
-        return productRepo.insertar(p);
+    public boolean insertarProducto(Producto producto) {
+        return repository.insertar(producto);
     }
 
-    public boolean actualizarProducto(Producto p) {
-        return productRepo.actualizar(p);
+    public boolean actualizarProducto(Producto producto) {
+        return repository.actualizar(producto);
     }
 
-    public boolean eliminarProducto(int id) {
-        return productRepo.eliminar(id);
+    public void desactivarProducto(int id) {
+        // soft‐delete: marca activo = 0
+        repository.eliminar(id);
     }
 
     public boolean reducirStock(int productoId, int cantidad) {
-        return productRepo.reducirStock(productoId, cantidad);
+        return repository.reducirStock(productoId, cantidad);
+    }
+
+    /**
+     * Reactivar un producto previamente inactivado (activo = 0).
+     */
+    public void activarProducto(int id) {
+        repository.activar(id);
+    }
+
+    /**
+     * Lista todos los productos inactivos (activo = 0).
+     */
+    public List<Producto> listarProductosInactivos() {
+        return repository.listarInactivos();
     }
 }

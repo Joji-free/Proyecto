@@ -9,15 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Única clase que concentra el CRUD completo de 'productos'.
+ * Única clase que concentra el CRUD completo de 'productos',
+ * ahora adaptada para soft‐delete (campo 'activo') y reactivación.
  */
 public class ProductRepository implements IProductRepository {
 
     @Override
     public List<Producto> listarTodos() {
         List<Producto> lista = new ArrayList<>();
-        String sql = "SELECT id, nombre, marca, precio, stock FROM productos";
-        try (Connection conn = Conexion.getConnection(); //Cada vez que ProductRepository necesita conectarse a la base de datos
+        // Solo productos activos (activo = 1)
+        String sql = "SELECT id, nombre, marca, precio, stock, activo FROM productos WHERE activo = 1";
+        try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -28,6 +30,7 @@ public class ProductRepository implements IProductRepository {
                 p.setMarca(rs.getString("marca"));
                 p.setPrecio(rs.getBigDecimal("precio"));
                 p.setStock(rs.getInt("stock"));
+                p.setActivo(rs.getBoolean("activo"));
                 lista.add(p);
             }
         } catch (SQLException e) {
@@ -38,7 +41,8 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public Producto obtenerPorId(int id) {
-        String sql = "SELECT id, nombre, marca, precio, stock FROM productos WHERE id = ?";
+        // Solo devolver si está activo
+        String sql = "SELECT id, nombre, marca, precio, stock, activo FROM productos WHERE id = ? AND activo = 1";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -51,6 +55,7 @@ public class ProductRepository implements IProductRepository {
                     p.setMarca(rs.getString("marca"));
                     p.setPrecio(rs.getBigDecimal("precio"));
                     p.setStock(rs.getInt("stock"));
+                    p.setActivo(rs.getBoolean("activo"));
                     return p;
                 }
             }
@@ -62,6 +67,7 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public boolean insertar(Producto producto) {
+        // Se omite campo 'activo' porque en BD tiene DEFAULT 1
         String sql = "INSERT INTO productos (nombre, marca, precio, stock) VALUES (?, ?, ?, ?)";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -81,7 +87,8 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public boolean actualizar(Producto producto) {
-        String sql = "UPDATE productos SET nombre = ?, marca = ?, precio = ?, stock = ? WHERE id = ?";
+        // No se toca 'activo'; solo los campos editables
+        String sql = "UPDATE productos SET nombre = ?, marca = ?, precio = ?, stock = ? WHERE id = ? AND activo = 1";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -101,7 +108,8 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM productos WHERE id = ?";
+        // Soft‐delete: marcar 'activo' = 0 en lugar de borrar
+        String sql = "UPDATE productos SET activo = 0 WHERE id = ?";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -116,7 +124,7 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public boolean reducirStock(int productoId, int cantidad) {
-        String sql = "UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?";
+        String sql = "UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ? AND activo = 1";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -130,5 +138,46 @@ public class ProductRepository implements IProductRepository {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Reactiva (soft‐undelete) un producto marcándolo como activo = 1.
+     */
+    public boolean activar(int id) {
+        String sql = "UPDATE productos SET activo = 1 WHERE id = ?";
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve todos los productos inactivos (activo = 0).
+     */
+    public List<Producto> listarInactivos() {
+        List<Producto> lista = new ArrayList<>();
+        String sql = "SELECT id, nombre, marca, precio, stock, activo FROM productos WHERE activo = 0";
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Producto p = new Producto();
+                p.setId(rs.getInt("id"));
+                p.setNombre(rs.getString("nombre"));
+                p.setMarca(rs.getString("marca"));
+                p.setPrecio(rs.getBigDecimal("precio"));
+                p.setStock(rs.getInt("stock"));
+                p.setActivo(rs.getBoolean("activo"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 }
