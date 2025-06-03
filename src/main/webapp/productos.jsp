@@ -5,99 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Productos - Mimir Petshop</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-    }
-    .top-bar {
-      width: 90%;
-      margin: 20px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .btn-comprar   { background-color: #4CAF50; color: white; }
-    .btn-editar    { background-color: #2196F3; color: white; }
-    .btn-eliminar  { background-color: #f44336; color: white; }
-    .btn-add       { background-color: #555;  color: white; }
-    .btn-inactivos { background-color: #888;  color: white; margin-left: 10px; }
-    .action-bar {
-      width: 90%;
-      margin: 0 auto 15px auto;
-      display: flex;
-      justify-content: flex-start;
-    }
-    table {
-      width: 90%;
-      margin: 0 auto 30px auto;
-      border-collapse: collapse;
-      background-color: white;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th { background-color: #f2f2f2; }
-
-    /* Modal para eliminar producto */
-    #modalEliminar {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #modalEliminar .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      text-align: center;
-    }
-
-    #modalEliminar .modal-content h3 {
-      margin-top: 0;
-    }
-
-    /* Modal para error de stock */
-    #modalStockError {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1001;
-      justify-content: center;
-      align-items: center;
-    }
-    #modalStockError > div {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 320px;
-      text-align: center;
-    }
-    #modalStockError button {
-      margin-top: 20px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="css/productos.css" />
 </head>
 <body>
 <%
@@ -206,47 +114,6 @@
   </div>
 </div>
 
-<script>
-  let productoIdAEliminar = null;
-
-  function confirmarEliminacion(id) {
-    productoIdAEliminar = id;
-    document.getElementById('modalEliminar').style.display = 'flex';
-  }
-
-  function cerrarModal() {
-    productoIdAEliminar = null;
-    document.getElementById('modalEliminar').style.display = 'none';
-  }
-
-  function eliminarProducto() {
-    if (productoIdAEliminar !== null) {
-      window.location.href = 'deleteProduct?id=' + productoIdAEliminar;
-    }
-  }
-
-  // Validar cantidad antes de enviar el formulario
-  function validarCantidad(form) {
-    const cantidadInput = form.querySelector('input[name="cantidad"]');
-    const cantidad = parseInt(cantidadInput.value);
-    const stock = parseInt(cantidadInput.getAttribute('data-stock'));
-
-    if (isNaN(cantidad) || cantidad < 1) {
-      alert("Ingresa una cantidad válida (mayor o igual a 1).");
-      return false;
-    }
-
-    if (cantidad > stock) {
-      document.getElementById('modalStockError').style.display = 'flex';
-      return false;
-    }
-    return true;
-  }
-
-  function cerrarModalStock() {
-    document.getElementById('modalStockError').style.display = 'none';
-  }
-</script>
-
+<script src="js/productos.js"></script>
 </body>
 </html>

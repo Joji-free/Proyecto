@@ -5,64 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Carrito de Compras - Mimir Petshop</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
-        .top-bar {
-            width: 80%;
-            margin: 20px auto;
-            display: flex;
-            justify-content: space-between;
-        }
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .btn-checkout { background-color: #4CAF50; color: white; }
-        .btn-cancel { background-color: #f44336; color: white; }
-        table {
-            width: 80%;
-            margin: 0 auto 30px auto;
-            border-collapse: collapse;
-            background-color: white;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        th { background-color: #f2f2f2; }
-        .form-checkout {
-            width: 80%;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/cart.css">
 </head>
 <body>
 <%
-    // Verificar sesión y usuario
+    /* ---------- Lógica de sesión y datos ---------- */
     if (session.getAttribute("usuario") == null) {
         response.sendRedirect("login");
         return;
     }
 
-    // Recuperar lista “items”: List<Map<String,Object>>
     List<Map<String, Object>> items =
             (List<Map<String, Object>>) request.getAttribute("items");
     BigDecimal totalGeneral = (BigDecimal) request.getAttribute("totalGeneral");
 
-    // Mensajes posibles
-    String mensajeError = (String) request.getAttribute("mensajeError");
-    String mensajeExito = (String) request.getAttribute("mensajeExito");
+    String mensajeError  = (String) request.getAttribute("mensajeError");
+    String mensajeExito  = (String) request.getAttribute("mensajeExito");
 %>
 
 <div class="top-bar">
@@ -75,10 +33,10 @@
 </div>
 
 <% if (mensajeError != null) { %>
-<div style="color: red; text-align: center;"><%= mensajeError %></div>
+<div class="msg-error"><%= mensajeError %></div>
 <% } %>
 <% if (mensajeExito != null) { %>
-<div style="color: green; text-align: center;"><%= mensajeExito %></div>
+<div class="msg-success"><%= mensajeExito %></div>
 <% } %>
 
 <table>
@@ -121,12 +79,10 @@
     <h3>Confirmar Compra</h3>
     <form action="checkout" method="post">
         <label for="clienteNombre">Nombre del Cliente:</label><br/>
-        <input type="text" name="clienteNombre" id="clienteNombre" required
-               style="width: 100%; padding: 8px; margin: 5px 0 15px 0; border: 1px solid #ccc;" /><br/>
+        <input type="text" name="clienteNombre" id="clienteNombre" required /><br/>
 
         <label for="clienteCedula">Cédula:</label><br/>
-        <input type="text" name="clienteCedula" id="clienteCedula" required
-               style="width: 100%; padding: 8px; margin: 5px 0 15px 0; border: 1px solid #ccc;" /><br/>
+        <input type="text" name="clienteCedula" id="clienteCedula" required /><br/>
 
         <button type="submit" class="btn btn-checkout">Realizar Pago</button>
     </form>

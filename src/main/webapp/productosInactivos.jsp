@@ -5,64 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Productos Inactivos - Mimir Petshop</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-    }
-    .top-bar {
-      width: 90%;
-      margin: 20px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .btn-reactivar { background-color: #4CAF50; color: white; }
-    .btn-volver    { background-color: #555; color: white; }
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background-color: white;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th { background-color: #f2f2f2; }
-
-    /* Modal personalizado */
-    #modalReactivar {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #modalReactivar .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      text-align: center;
-    }
-
-    #modalReactivar .modal-content h3 {
-      margin-top: 0;
-    }
-  </style>
+  <link rel="stylesheet" href="css/Inactivos.css">
 </head>
 <body>
 <%
@@ -130,31 +73,12 @@
     <h3>¿Reactivar producto?</h3>
     <p>El producto volverá a estar disponible para la venta.</p>
     <div style="margin-top: 20px;">
-      <button onclick="reactivarProducto()" style="background-color:#4CAF50; color:white; padding:8px 16px; border:none; border-radius:4px;">Reactivar</button>
-      <button onclick="cerrarModal()" style="margin-left:10px; padding:8px 16px; border:none; border-radius:4px;">Cancelar</button>
+      <button onclick="reactivarProducto()" class="btn btn-reactivar">Reactivar</button>
+      <button onclick="cerrarModal()" class="btn" style="margin-left:10px;">Cancelar</button>
     </div>
   </div>
 </div>
 
-<script>
-  let productoIdAReactivar = null;
-
-  function confirmarReactivacion(id) {
-    productoIdAReactivar = id;
-    document.getElementById("modalReactivar").style.display = "flex";
-  }
-
-  function cerrarModal() {
-    productoIdAReactivar = null;
-    document.getElementById("modalReactivar").style.display = "none";
-  }
-
-  function reactivarProducto() {
-    if (productoIdAReactivar !== null) {
-      window.location.href = "activateProduct?id=" + productoIdAReactivar;
-    }
-  }
-</script>
-
+<script src="js/inactivos.js"></script>
 </body>
 </html>
