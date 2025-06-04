@@ -21,31 +21,38 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/productos");
             return;
         }
-        // Mostrar el formulario de login
+        // Mostrar el formulario de login/registro
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 1. Leer parámetros como String
+
+        String action = request.getParameter("action");
+        if ("register".equalsIgnoreCase(action)) {
+            registrarUsuario(request, response);
+        } else {
+            loginUsuario(request, response);
+        }
+    }
+
+    private void loginUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String usuarioParam = request.getParameter("usuario");
         String contrasenaParam = request.getParameter("contrasena");
 
-        // 2. Validar que no vengan vacíos o nulos
         if (usuarioParam == null || usuarioParam.trim().isEmpty()
                 || contrasenaParam == null || contrasenaParam.trim().isEmpty()) {
-            // Si falta alguno, reenviar al JSP con mensaje de error y precargar usuario
             request.setAttribute("error", "Debe ingresar usuario y contraseña.");
             request.setAttribute("usuario", usuarioParam != null ? usuarioParam : "");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
-        // 3. Llamar al servicio para validar credenciales
         Usuario u = userService.validarUsuario(usuarioParam.trim(), contrasenaParam.trim());
         if (u != null) {
-            // 4. Usuario válido: crear sesión, asignar rol e inicializar carrito
             HttpSession session = request.getSession();
             session.setAttribute("usuario", u.getUsuario());
             if (u.getUsuario().equalsIgnoreCase("admin")) {
@@ -57,9 +64,35 @@ public class LoginServlet extends HttpServlet {
 
             response.sendRedirect(request.getContextPath() + "/productos");
         } else {
-            // 5. Credenciales incorrectas: reenviar con mensaje y precargar usuario
             request.setAttribute("error", "Usuario o contraseña incorrectos");
             request.setAttribute("usuario", usuarioParam);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
+    }
+
+    private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String usuarioParam = request.getParameter("usuario");
+        String contrasenaParam = request.getParameter("contrasena");
+
+        if (usuarioParam == null || usuarioParam.trim().isEmpty()
+                || contrasenaParam == null || contrasenaParam.trim().isEmpty()) {
+            request.setAttribute("errorRegister", "Debe ingresar usuario y contraseña para registrarse.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setUsuario(usuarioParam.trim());
+        nuevoUsuario.setContrasena(contrasenaParam.trim());
+
+        boolean registrado = userService.registrarUsuario(nuevoUsuario);
+        if (registrado) {
+            request.setAttribute("msgSuccess", "Registro exitoso. Por favor, inicie sesión.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+            request.setAttribute("errorRegister", "El usuario ya existe o no se pudo registrar.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

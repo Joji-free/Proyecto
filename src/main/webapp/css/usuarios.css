@@ -1,0 +1,295 @@
+/* usuarios.css */
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Barra superior */
+.top-bar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar .btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.top-bar .btn:hover {
+    background-color: #c0392b;
+}
+
+/* Título principal */
+.titulo {
+    margin-top: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Mensajes de feedback */
+.mensajes {
+    width: 60%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.mensajes .error {
+    color: #c0392b;
+    text-align: center;
+    padding: 8px 0;
+}
+
+.mensajes .exito {
+    color: #27ae60;
+    text-align: center;
+    padding: 8px 0;
+}
+
+/* Botón "Añadir Usuario" */
+.boton-anadir-contenedor {
+    width: 60%;
+    margin: 0 auto 20px auto;
+    text-align: right;
+}
+
+.btn-anadir {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-anadir:hover {
+    background-color: #1c5980;
+}
+
+/* Formulario de creación */
+.form-crear {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    width: 60%;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-crear h3 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.form-crear label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.form-crear input[type="text"],
+.form-crear input[type="password"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.botones-form {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-crear {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-crear:hover {
+    background-color: #1e874b;
+}
+
+.btn-cancelar {
+    background-color: #7f8c8d;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-cancelar:hover {
+    background-color: #5e6a6d;
+}
+
+/* Ocultar elementos con la clase "oculto" */
+.oculto {
+    display: none !important;
+}
+
+/* Tabla de usuarios */
+.tabla-contenedor {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table thead tr {
+    background-color: #ecf0f1;
+}
+
+table th,
+table td {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+/* Botones de la tabla */
+.btn-editar,
+.btn-eliminar {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-editar {
+    background-color: #2980b9;
+    margin-right: 6px;
+}
+
+.btn-editar:hover {
+    background-color: #1c5980;
+}
+
+.btn-eliminar {
+    background-color: #c0392b;
+}
+
+.btn-eliminar:hover {
+    background-color: #962d22;
+}
+
+/* Modales (Edición y Eliminación) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-contenido h3 {
+    margin-top: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+.modal-contenido p {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.modal-contenido label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.modal-contenido input[type="text"],
+.modal-contenido input[type="password"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .form-crear {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .tabla-contenedor {
+        width: 95%;
+    }
+
+    table th,
+    table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .modal-contenido {
+        width: 90%;
+    }
+
+    .modal-contenido input[type="text"],
+    .modal-contenido input[type="password"],
+    .form-crear input[type="text"],
+    .form-crear input[type="password"] {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+}

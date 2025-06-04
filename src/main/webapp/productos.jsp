@@ -14,6 +14,7 @@
   String usuario = (String) session.getAttribute("usuario");
   String error   = request.getParameter("error");
 
+  // Si no está autenticado, redirigimos al login
   if (usuario == null) {
     response.sendRedirect("login");
     return;
@@ -34,6 +35,8 @@
 <div class="action-bar">
   <a href="addProduct"><button class="btn btn-add">+ Añadir Producto</button></a>
   <a href="productosInactivos"><button class="btn btn-inactivos">Ver Inactivos</button></a>
+  <!-- NUEVO BOTÓN: Solo para ADMIN -->
+  <a href="usuarios"><button class="btn btn-admin-usuarios">Administrar Usuarios</button></a>
 </div>
 <% } %>
 

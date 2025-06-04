@@ -27,6 +27,20 @@ body {
     display: flex;
     justify-content: flex-start;
 }
+
+/* en productos.css */
+.btn-admin-usuarios {
+    background-color: #ffa500;  /* color naranja, por ejemplo */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-admin-usuarios:hover {
+    background-color: #e59400;
+}
+
 table {
     width: 90%;
     margin: 0 auto 30px auto;
