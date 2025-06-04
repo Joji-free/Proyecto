@@ -80,10 +80,10 @@
     <input type="hidden" name="action" value="crear" />
 
     <label for="nuevoUsuario">Usuario:</label>
-    <input type="text" name="usuario" id="nuevoUsuario" required />
+    <input type="text" name="usuario" id="nuevoUsuario" />
 
     <label for="nuevaContrasena">Contraseña:</label>
-    <input type="password" name="contrasena" id="nuevaContrasena" required />
+    <input type="password" name="contrasena" id="nuevaContrasena" />
 
     <div class="botones-form">
       <button type="submit" class="btn btn-crear">Guardar</button>
@@ -157,10 +157,10 @@
       <input type="hidden" name="id" id="editId" />
 
       <label for="editUsuario">Usuario:</label>
-      <input type="text" name="usuario" id="editUsuario" required />
+      <input type="text" name="usuario" id="editUsuario" />
 
       <label for="editContrasena">Contraseña:</label>
-      <input type="password" name="contrasena" id="editContrasena" required />
+      <input type="password" name="contrasena" id="editContrasena" />
 
       <div class="botones-form">
         <button type="submit" class="btn btn-guardar">Guardar</button>

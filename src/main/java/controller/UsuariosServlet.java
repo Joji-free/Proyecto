@@ -38,7 +38,6 @@ public class UsuariosServlet extends HttpServlet {
         request.setAttribute("usuarios", listaUsuarios);
 
         // 3. Forward al JSP que mostrará la tabla de usuarios
-        // NOTA: aquí no se antepone request.getContextPath()
         request.getRequestDispatcher("/usuarios.jsp")
                 .forward(request, response);
     }
@@ -63,9 +62,9 @@ public class UsuariosServlet extends HttpServlet {
             throws ServletException, IOException {
         // Obtener parámetros del formulario
         String nombreUsuario = request.getParameter("usuario");
-        String contrasena     = request.getParameter("contrasena");
+        String contrasena    = request.getParameter("contrasena");
 
-        // Validar parámetros mínimos
+        // Validar parámetros mínimos (campo vacío)
         if (nombreUsuario == null || nombreUsuario.trim().isEmpty()
                 || contrasena == null || contrasena.trim().isEmpty()) {
             request.setAttribute("errorCrear", "Debe completar usuario y contraseña.");
@@ -89,9 +88,33 @@ public class UsuariosServlet extends HttpServlet {
 
     private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String nuevoUsuario     = request.getParameter("usuario");
-        String nuevaContrasena  = request.getParameter("contrasena");
+        String idParam        = request.getParameter("id");
+        String nuevoUsuario   = request.getParameter("usuario");
+        String nuevaContrasena= request.getParameter("contrasena");
+
+        // Validar que los parámetros existan
+        if (idParam == null || idParam.trim().isEmpty()) {
+            request.setAttribute("errorEditar", "ID de usuario inválido.");
+            doGet(request, response);
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorEditar", "ID de usuario inválido.");
+            doGet(request, response);
+            return;
+        }
+
+        // Validar que los campos no estén vacíos
+        if (nuevoUsuario == null || nuevoUsuario.trim().isEmpty()
+                || nuevaContrasena == null || nuevaContrasena.trim().isEmpty()) {
+            request.setAttribute("errorEditar", "Usuario y contraseña no pueden estar vacíos.");
+            doGet(request, response);
+            return;
+        }
 
         // Obtener el usuario actual
         Usuario existente = userService.buscarPorId(id);
@@ -116,7 +139,21 @@ public class UsuariosServlet extends HttpServlet {
 
     private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            request.setAttribute("errorEliminar", "ID de usuario inválido.");
+            doGet(request, response);
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorEliminar", "ID de usuario inválido.");
+            doGet(request, response);
+            return;
+        }
 
         boolean eliminado = userService.eliminarUsuarioPorId(id);
         if (!eliminado) {
